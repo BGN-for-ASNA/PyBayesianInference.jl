@@ -1,9 +1,7 @@
-[deps]
-numpyro = ""
-arviz = ""
-jax = ""
-jaxlib = ""
+[pip]
+ipython = ""
 BayesInference = ""
 
-[pip]
-BayesInference = "0.0.30"
+    [pip.deps]
+    ipython = ""
+    bayesinference = ""

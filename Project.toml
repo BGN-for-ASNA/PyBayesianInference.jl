@@ -1,11 +1,12 @@
 name = "BayesianInference"
-uuid = "b4f34e8a-1234-5678-9abc-def123456789"
-authors = ["Sebastian Sosa <bi@s-sosa.com>"]
+uuid = "a1b2c3d4-e5f6-7890-1234-567890abcdef"
 version = "0.1.0"
 
 [deps]
+CondaPkg = "992eb4ea-22a4-4c89-a5bb-47a3300528ab"
 PythonCall = "6099a3de-0909-46bc-b1f4-468b9a2dfc0d"
-CondaPkg = "992eb4ea-22a4-4c89-a5bb-47a330058a6f"
 
 [compat]
 julia = "1.6"
+CondaPkg = "0.2"
+PythonCall = "0.9"
