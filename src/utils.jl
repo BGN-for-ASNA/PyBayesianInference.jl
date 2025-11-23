@@ -43,7 +43,20 @@ end
 Updates the environment.
 """
 function update_package()
+    println("🔄 Checking for updates...")
     CondaPkg.update()
+    
+    println("\n📦 [BayesInference] Installation Details:")
+    try
+        # Run pip show within the specific Conda environment
+        CondaPkg.withenv() do
+            run(`pip show BayesInference`)
+        end
+    catch
+        println("⚠️ Could not retrieve package details. Is 'BayesInference' installed?")
+    end
+
+    println("\n❗ IMPORTANT: If a new version was installed, you must RESTART your Jupyter Kernel or Julia Session for the changes to take effect.")
 end
 
 end

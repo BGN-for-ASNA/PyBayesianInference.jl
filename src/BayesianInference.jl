@@ -10,7 +10,18 @@ if isfile(joinpath(@__DIR__, "utils.jl"))
     export create_env, delete_env, install_package, update_package
 end
 
-export importBI, @pymodel, jnp, jax, pybuiltins, pydict, pylist
+export importBI, @BI, jnp, jax, pybuiltins, pydict, pylist
+
+
+# -------------------------------------------------------
+# Teach PythonCall to convert Julia ':' to Python slice(None)
+# This allows syntax like array[:, 0] to work on Py objects
+# -------------------------------------------------------
+PythonCall.Py(::Colon) = pybuiltins.slice(nothing)
+
+# -------------------------------------------------------
+# Import BI Module
+# -------------------------------------------------------
 
 """
     importBI(; platform="cpu", cores=nothing, rand_seed=true, deallocate=false, print_devices_found=true, backend="numpyro")
@@ -99,11 +110,11 @@ function PythonCall.Py(obj::InspectableFunction)
     return factory(obj.f)
 end
 
-# 4. The FIXED Macro
-macro pymodel(ex)
+# 4. The Macro for Python Models
+macro BI(ex)
     # Check validity
     if !isa(ex, Expr) || (ex.head != :function && ex.head != :(=))
-        error("@pymodel must be used on a function definition")
+        error("@BI must be used on a function definition")
     end
     
     call_expr = ex.args[1]
@@ -168,6 +179,19 @@ for op in (:+, :-, :*, :/, ://, :%, :^)
         Base.$op(a::PyWrappers, b::PyWrappers) = $op(Py(a), Py(b))
     end
 end
+
+# -------------------------------------------------------
+# Allow access to Python attributes (like .shape) on wrapped arrays.
+# If the property isn't a field of the Julia struct, fetch it from Python.
+# -------------------------------------------------------
+function Base.getproperty(x::PyWrappers, s::Symbol)
+    if hasfield(typeof(x), s)
+        return getfield(x, s)
+    else
+        return getproperty(Py(x), s)
+    end
+end
+
 
 
 # 2. Fix Indexing (getindex/setindex!)
