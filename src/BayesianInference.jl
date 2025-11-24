@@ -10,7 +10,7 @@ if isfile(joinpath(@__DIR__, "utils.jl"))
     export create_env, delete_env, install_package, update_package
 end
 
-export importBI, @BI, jnp, jax, pybuiltins, pydict, pylist
+export importBI, @BI, @pyplot, jnp, jax, pybuiltins, pydict, pylist
 
 
 # -------------------------------------------------------
@@ -145,6 +145,63 @@ macro BI(ex)
     end
 end
 
+# -------------------------------------------------------
+# Plotting Macro (@pyplot)
+# -------------------------------------------------------
+"""
+    @pyplot expression
+
+Executes a Python plotting command, intercepts plt.show()/plt.close(),
+captures the figure, and displays it in Julia.
+Uses a native Python lambda for the hook to avoid __signature__ errors.
+"""
+macro pyplot(ex)
+    return quote
+        local plt = PythonCall.pyimport("matplotlib.pyplot")
+        local pybuiltins = PythonCall.pybuiltins
+        
+        # Save original functions
+        local real_show = plt.show
+        local real_close = plt.close
+        
+        # Define a Python No-Op lambda (Safe for introspection)
+        # We pass empty dicts to avoid "SystemError: frame does not exist"
+        local g = pybuiltins.dict()
+        local l = pybuiltins.dict()
+        local noop = pybuiltins.eval("lambda *args, **kwargs: None", g, l)
+
+        # Inject No-Ops to prevent the figure from being closed/hidden
+        plt.show = noop
+        plt.close = noop
+
+        local fig = nothing
+        try
+            # Run the user's plotting code
+            $(esc(ex))
+            
+            # Grab the current figure (it should still be alive)
+            fig = plt.gcf()
+            
+            # Check if it has content
+            if length(fig.axes) > 0
+                display(fig)
+            else
+                println("⚠️ No plot was generated (Figure is empty).")
+            end
+        catch e
+            rethrow(e)
+        finally
+            # Restore original functions
+            plt.show = real_show
+            plt.close = real_close
+            
+            # Now we can safely close the figure to free memory
+            if fig !== nothing
+                real_close(fig)
+            end
+        end
+    end
+end
 
 # Global Constants for jax.numpy
 # 1. Define a global constant for jnp
