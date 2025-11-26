@@ -11,7 +11,7 @@
 
 ## One Mental Model. Three Languages.
 
-**BayesianInference (BI)** provides a unified experience across R, Python, and Julia. Whether you work in R's formula syntax, Python's object-oriented approach, or Julia's mathematical elegance, the model logic remains consistent.
+**BayesianInference (BI)** provides a unified experience across Julia, Python, and R. Whether you work in R's formula syntax, Python's object-oriented approach, or Julia's mathematical elegance, the model logic remains consistent.
 
 -   ✅ **Zero Context Switching**: Variable names, distribution signatures, and model logic remain consistent across all implementations.
 -   ✅ **NumPyro Power**: All interfaces compile down to XLA via JAX for blazing fast inference.
