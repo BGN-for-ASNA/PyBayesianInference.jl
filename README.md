@@ -289,15 +289,14 @@ GPU support available on compatible systems with JAX GPU installation.
 ## Related Packages
 
 - [BIR](https://github.com/BGN-for-ASNA/BIR) - R implementation
-- [PythonCall.jl](https://github.com/cjdoris/PythonCall.jl) - Python interoperability
-- [Turing.jl](https://github.com/TuringLang/Turing.jl) - Native Julia Bayesian inference
+- [BI]([https://github.com/cjdoris/PythonCall.jl](https://pypi.org/project/BayesInference/)) - Python implementation
 
 ---
 
 <div align="center">
 
 **BayesianInference.jl (BIJ)**  
-Based on "The Bayesian Inference library for Python and R" by Sosa, McElreath, & Ross (2025).
+Based on "The Bayesian Inference library for Python, R, Julia" by Sosa, McElreath, & Ross (2025).
 
 [GitHub](https://github.com/BGN-for-ASNA/BIJ) | [Issues](https://github.com/BGN-for-ASNA/BIJ/issues) | [Quick Start](QUICKSTART.md)
 
