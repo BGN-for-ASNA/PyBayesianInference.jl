@@ -1,5 +1,5 @@
 name = "BayesianInference"
-uuid = "a1b2c3d4-e5f6-7890-1234-567890abcdef"
+uuid = "d122d8d1-e425-46db-8770-26312790ade9"
 version = "0.1.0"
 
 [deps]
